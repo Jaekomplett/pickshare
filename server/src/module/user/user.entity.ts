@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,8 +11,8 @@ import {
 import { LoginMethod } from './user-state.union';
 import { Board } from '../board/board.entity';
 import { Follow } from '../follow/follow.entity';
-import { Like } from '../like/like.entity';
 import { Comment } from '../comment/comment.entity';
+import { Heart } from '../heart/heart.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -42,15 +43,18 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Board, (board) => board.user)
+  @OneToMany((type) => Board, (board) => board.user, { eager: true })
   boards: Board[];
 
   @OneToMany(() => Follow, (follow) => follow.user)
+  @JoinColumn()
   follows: Follow[];
 
-  @OneToMany(() => Like, (like) => like.user)
-  likes: Like[];
+  @OneToMany(() => Heart, (heart) => heart.user)
+  @JoinColumn()
+  hearts: Heart[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
+  @JoinColumn()
   comments: Comment[];
 }
